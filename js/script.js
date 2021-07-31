@@ -113,21 +113,42 @@ Game.prototype.keyboardListener = function () {
 /*movement helpers */
 
 Game.prototype.moveLeft = function (sprite) {
+  let nextTile = this.map[this.player.y][this.player.x - 1];
+  if (this.player.x == 0 || nextTile == 1) {
+    console.log("thats a tile");
+    return;
+  }
+
   this.player.x -= 1;
   this.updateHoriz(sprite);
 };
 
 Game.prototype.moveUp = function () {
+  let nextTile = this.map[this.player.y - 1][this.player.x];
+  if (this.player.y == 0 || nextTile == 1) {
+    console.log("thats a tile");
+    return;
+  }
   this.player.y -= 1;
   this.updateVert();
 };
 
 Game.prototype.moveRight = function (sprite) {
+  let nextTile = this.map[this.player.y][this.player.x + 1];
+  if (this.player.x == this.map[this.player.y].length - 1 || nextTile == 1) {
+    console.log("thats a tile", nextTile);
+    return;
+  }
   this.player.x += 1;
   this.updateHoriz(sprite);
 };
 
 Game.prototype.moveDown = function () {
+  let nextTile = this.map[this.player.y + 1][this.player.x];
+  if (this.player.y == this.map.length - 1 || nextTile == 1) {
+    console.log("thats a tile");
+    return;
+  }
   this.player.y += 1;
   this.updateVert();
 };
