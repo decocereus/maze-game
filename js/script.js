@@ -56,10 +56,100 @@ Game.prototype.createEl = function (x, y, tileType) {
   return el;
 };
 
+Game.prototype.sizeUp = function () {
+  let map = this.el.querySelector(".game-map");
+  map.style.height = this.map.length * this.tileDimension + "px";
+  map.style.width = this.map[0].length * this.tileDimension + "px";
+};
+
+Game.prototype.placeSprite = function (type) {
+  let x = this[type].x;
+  let y = this[type].y;
+  let sprite = this.createEl(x, y, type);
+  sprite.id = type;
+  sprite.style.borderRadius = this.tileDimension + "px";
+  let layer = this.el.querySelector("#sprites");
+  layer.appendChild(sprite);
+  return sprite;
+};
+
+// the event codes for up down right left on the keyboard are as follows:
+//left:37
+//up:38
+//right:39
+//down:40
+
+Game.prototype.movePlayer = function (event) {
+  event.preventDefault();
+  let actions = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
+  //console.log(event.code);
+  if (actions.indexOf(event.code) === -1) {
+    console.log(event.code);
+    return;
+  }
+
+  switch (event.code) {
+    case "ArrowLeft":
+      this.moveLeft();
+      break;
+    case "ArrowUp":
+      this.moveUp();
+      break;
+    case "ArrowRight":
+      this.moveRight();
+      break;
+    case "ArrowDown":
+      this.moveDown();
+      break;
+  }
+};
+
+Game.prototype.keyboardListener = function () {
+  document.addEventListener("keydown", (event) => {
+    this.movePlayer(event);
+  });
+};
+
+/*movement helpers */
+
+Game.prototype.moveLeft = function (sprite) {
+  this.player.x -= 1;
+  this.updateHoriz(sprite);
+};
+
+Game.prototype.moveUp = function () {
+  this.player.y -= 1;
+  this.updateVert();
+};
+
+Game.prototype.moveRight = function (sprite) {
+  this.player.x += 1;
+  this.updateHoriz(sprite);
+};
+
+Game.prototype.moveDown = function () {
+  this.player.y += 1;
+  this.updateVert();
+};
+
+/*dom update helpers*/
+
+Game.prototype.updateVert = function () {
+  this.player.el.style.top = this.player.y * this.tileDimension + "px";
+};
+
+Game.prototype.updateHoriz = function (sprite) {
+  this.player.el.style.left = this.player.x * this.tileDimension + "px";
+};
+
 function init() {
-  let level = levels[0];
-  let myGame = new Game("game-container-1", level);
+  let myGame = new Game("game-container-1", levels[0]);
   myGame.populateMap();
+  myGame.sizeUp();
+  myGame.placeSprite("goal");
+  let playerSprite = myGame.placeSprite("player");
+  myGame.player.el = playerSprite;
+  myGame.keyboardListener();
 }
 
 init();

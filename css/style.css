@@ -27,10 +27,11 @@ body.success {
 p {
   margin: 10px 0px;
   padding: 0px;
+  text-align: center;
 }
 
 .game-map {
-  position: inherit;
+  position: relative;
   margin: 0px auto;
 }
 
@@ -40,13 +41,13 @@ div.layer div {
 }
 /*change the color*/
 #tiles div {
-  border: 1px solid gray;
+  border: 1px solid grey;
 }
 
-.default .floor {
-  background-color: lightgray;
+.floor {
+  background-color: lightgrey;
 }
-.default .wall {
+.wall {
   background-color: skyblue;
 }
 
