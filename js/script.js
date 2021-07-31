@@ -82,9 +82,7 @@ Game.prototype.placeSprite = function (type) {
 Game.prototype.movePlayer = function (event) {
   event.preventDefault();
   let actions = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
-  //console.log(event.code);
   if (actions.indexOf(event.code) === -1) {
-    console.log(event.code);
     return;
   }
 
@@ -107,46 +105,58 @@ Game.prototype.movePlayer = function (event) {
 Game.prototype.keyboardListener = function () {
   document.addEventListener("keydown", (event) => {
     this.movePlayer(event);
+    this.checkGoal();
   });
+};
+
+Game.prototype.checkGoal = function () {
+  let body = document.querySelector("body");
+  if ((this.player.y = this.goal.y && this.player.x == this.goal.x)) {
+    console.log("gotit");
+    body.className = "success";
+  } else {
+    body.className = "";
+  }
 };
 
 /*movement helpers */
 
-Game.prototype.moveLeft = function (sprite) {
+Game.prototype.moveLeft = function () {
+  console.log(this.map);
   let nextTile = this.map[this.player.y][this.player.x - 1];
+
   if (this.player.x == 0 || nextTile == 1) {
-    console.log("thats a tile");
+    console.log("thats a tile", nextTile);
     return;
   }
-
   this.player.x -= 1;
-  this.updateHoriz(sprite);
+  this.updateHoriz();
 };
 
 Game.prototype.moveUp = function () {
   let nextTile = this.map[this.player.y - 1][this.player.x];
   if (this.player.y == 0 || nextTile == 1) {
-    console.log("thats a tile");
+    console.log("thats a tile", nextTile);
     return;
   }
   this.player.y -= 1;
   this.updateVert();
 };
 
-Game.prototype.moveRight = function (sprite) {
-  let nextTile = this.map[this.player.y][this.player.x + 1];
+Game.prototype.moveRight = function () {
+  let nextTile = this.map[this.player.y - 1][this.player.x];
   if (this.player.x == this.map[this.player.y].length - 1 || nextTile == 1) {
     console.log("thats a tile", nextTile);
     return;
   }
   this.player.x += 1;
-  this.updateHoriz(sprite);
+  this.updateHoriz();
 };
 
 Game.prototype.moveDown = function () {
   let nextTile = this.map[this.player.y + 1][this.player.x];
   if (this.player.y == this.map.length - 1 || nextTile == 1) {
-    console.log("thats a tile");
+    console.log("thats a tile", nextTile);
     return;
   }
   this.player.y += 1;
@@ -159,7 +169,7 @@ Game.prototype.updateVert = function () {
   this.player.el.style.top = this.player.y * this.tileDimension + "px";
 };
 
-Game.prototype.updateHoriz = function (sprite) {
+Game.prototype.updateHoriz = function () {
   this.player.el.style.left = this.player.x * this.tileDimension + "px";
 };
 
