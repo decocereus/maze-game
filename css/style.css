@@ -19,11 +19,6 @@ body.success {
   margin: 0px auto;
 }
 
-#map-and-controls {
-  display: flex;
-  justify-content: center;
-}
-
 p {
   margin: 10px 0px;
   padding: 0px;
@@ -39,6 +34,7 @@ div.layer,
 div.layer div {
   position: absolute;
 }
+
 /*change the color*/
 #tiles div {
   border: 1px solid grey;
@@ -47,14 +43,9 @@ div.layer div {
 .floor {
   background-color: lightgrey;
 }
+
 .wall {
   background-color: skyblue;
-}
-
-.player,
-.goal {
-  transform-origin: center;
-  transform: scale(0.85);
 }
 
 .player {
@@ -65,6 +56,12 @@ div.layer div {
 .goal {
   background-color: #ffd700;
   border: 1px solid #98720b;
+}
+
+.player,
+.goal {
+  transform-origin: center;
+  transform: scale(0.85);
 }
 
 #success-msg {
@@ -79,4 +76,9 @@ div.layer div {
 body.success #success-msg {
   opacity: 1;
   transition: opacity 0.2s ease;
+}
+
+#map-and-controls {
+  display: flex;
+  justify-content: center;
 }
