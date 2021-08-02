@@ -11,16 +11,33 @@
 
 <body>
     <div id="game-container-1" class="game-container">
-        <div id="map-and-controls">
-            <div id="game-map-1" class="game-map">
-                <div id="tiles" class="layer"></div>
-                <div id="sprites" class="layer"></div>
-                <div id="success-msg">200iq move! Goal reached.</div>
+        <h1 class="intro">Welcome to Maze Runner...</h1>
+        <div class ="typewriter">
+            <div id="map-and-controls">
+                
+                <div id="game-map-1" class="game-map">
+                    <div id="tiles" class="layer"></div>
+                    <div id="sprites" class="layer"></div>
+                    <div id="success-msg">200iq move! Goal reached. Tap the maze to change levels.</div>
+                </div>
+                <div id='controls'>
+                    <button id='up'></button>
+                    <div id='horiz'>
+                        <button id='left'></button>
+                        <button id='right'></button>
+                    </div>
+                    <button id='down'></button>
+                </div>
             </div>
+            <p id="text-1" class="text">
+                To play the game use the cursor <i>keys</i> or <i>buttons</i> to move the player marble.
+            </p>
+        
+            <footer class = 'footer'> 
+                Created by
+                <a href="https://www.linkedin.com/in/amartyasingh07/" target="_blank" rel="noopener"> Amartya Singh</a>
+            </footer>
         </div>
-        <p id="text-1" class="text">
-            To play the game use the cursor <i>keys</i> or <i>buttons</i> to move the player marble.
-        </p>
     </div>
     <script type="text/javascript" src="js/script.js"></script>
     <noscript>Please turn JavaScript on to play the game.</noscript>

@@ -3,15 +3,16 @@
 }
 
 body {
-  font-family: Calibri;
+  font-family: "Source Code Pro", monospace;
   transition: 0.2s ease;
   text-align: center;
+  background-color: #292f36;
 }
 /*
     Change the color of the success screen 
 */
 body.success {
-  background-color: #b7f0b7;
+  background-color: #129b1293;
   transition: 0.2s ease;
 }
 
@@ -22,7 +23,12 @@ body.success {
 p {
   margin: 10px 0px;
   padding: 0px;
+  font-size: 30px;
   text-align: center;
+  color: #4ecdc4;
+}
+p i {
+  color: #c95b5b;
 }
 
 .game-map {
@@ -41,21 +47,21 @@ div.layer div {
 }
 
 .floor {
-  background-color: lightgrey;
+  background-color: #ff6b6b;
 }
 
 .wall {
-  background-color: skyblue;
+  background-color: #ffe66d;
 }
 
 .player {
-  background-color: #90ee90;
-  border: 1px solid green;
+  background-color: #f7fff7;
+  border: 1.5px solid black;
   transition: left 0.2s linear, top 0.2s linear;
 }
 .goal {
-  background-color: #ffd700;
-  border: 1px solid #98720b;
+  background-color: #4ecdc4;
+  border: 1px solid white;
 }
 
 .player,
@@ -69,8 +75,8 @@ div.layer div {
   transition: opacity 0.2s ease;
   position: absolute;
   padding: 5px 5px;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
+  background-color: rgba(246, 251, 252, 0.5);
+  color: black;
   width: calc(100% -8px);
 }
 body.success #success-msg {
@@ -80,5 +86,187 @@ body.success #success-msg {
 
 #map-and-controls {
   display: flex;
+  /* flex-direction: column; */
   justify-content: center;
+  align-items: center;
+  margin-left: 400px;
+  margin-top: 90px;
+  width: 50%;
+}
+
+#controls {
+  margin-left: 0px;
+  text-align: center;
+}
+#controls button {
+  padding: 10px 10px;
+  width: 48px;
+  height: 48px;
+  margin-top: 10px;
+  margin-right: 30px;
+  /*change the color*/
+  background-color: #ff8585;
+  border: 1px solid black;
+  border-radius: 3px;
+  cursor: pointer;
+  position: relative;
+}
+
+#controls #horiz {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button #right {
+  margin-left: 5px;
+}
+button #left {
+  margin-right: 5-x;
+}
+
+#controls button::before {
+  content: "";
+  width: 0px;
+  position: absolute;
+}
+button#left::before {
+  border-top: 10px solid transparent;
+  border-right: 15px solid #f7fff7;
+  border-bottom: 10px solid transparent;
+  left: 13px;
+  top: 12px;
+}
+button#right::before {
+  border-top: 10px solid transparent;
+  border-left: 15px solid #f7fff7;
+  border-bottom: 10px solid transparent;
+  left: 15px;
+  top: 12px;
+}
+button#up::before {
+  border-right: 10px solid transparent;
+  border-left: 10px solid transparent;
+  border-bottom: 15px solid #f7fff7;
+  left: 13px;
+  top: 14px;
+}
+button#down::before {
+  border-right: 10px solid transparent;
+  border-left: 10px solid transparent;
+  border-top: 15px solid #f7fff7;
+  left: 13px;
+  top: 15px;
+}
+
+.player.collide {
+  animation: wobble 0.2s;
+  animation-iteration-count: infinite;
+}
+
+.footer {
+  margin-top: 85px;
+  margin-bottom: 10px;
+  margin-right: 35px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #fe81a297;
+}
+.footer a:link {
+  color: #fe81a297;
+  text-decoration: none;
+}
+.footer a:visited {
+  color: #fe81a297;
+}
+.footer a:hover {
+  color: rgba(209, 227, 226, 0.913);
+}
+
+h1 {
+  font-family: "Source Code Pro", monospace;
+  color: lightgray;
+  margin: 70px auto;
+  font-size: 50px;
+  font-weight: normal;
+  position: relative;
+  width: max-content;
+}
+h1::before,
+h1::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+h1::before {
+  background: #292f36;
+  animation: typewriter 6s steps(25) 1s forwards;
+}
+h1::after {
+  width: 0.125em;
+  background: white;
+  animation: typewriter 6s steps(25) 1s forwards, blink 750ms steps(25) infinite;
+}
+
+.typewriter {
+  opacity: 0;
+  transform: translateY(3rem);
+  animation: fadeInUp 2s ease 7s forwards;
+}
+
+@keyframes typewriter {
+  to {
+    left: 100%;
+  }
+}
+
+@keyframes blink {
+  to {
+    background: transparent;
+  }
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes wobble {
+  0% {
+    transform: scale(0.85) translate(1px, 1px);
+  }
+  10% {
+    transform: scale(0.85) translate(-1px, -2px);
+  }
+  20% {
+    transform: scale(0.85) translate(-3px, 0px);
+  }
+  30% {
+    transform: scale(0.85) translate(3px, 2px);
+  }
+  40% {
+    transform: scale(0.85) translate(1px, -1px);
+  }
+  50% {
+    transform: scale(0.85) translate(-1px, 2px);
+  }
+  60% {
+    transform: scale(0.85) translate(-3px, 1px);
+  }
+  70% {
+    transform: scale(0.85) translate(3px, 1px);
+  }
+  80% {
+    transform: scale(0.85) translate(-1px, -1px);
+  }
+  90% {
+    transform: scale(0.85) translate(1px, 2px);
+  }
+  100% {
+    transform: scale(0.85) translate(1px, -2px);
+  }
 }

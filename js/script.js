@@ -1,232 +1,341 @@
-let levels = [];
+let app = {};
 
-levels[0] = {
-  map: [
-    [1, 1, 0, 0, 1],
-    [1, 0, 0, 0, 0],
-    [0, 0, 1, 1, 0],
-    [0, 0, 0, 1, 0],
-    [0, 1, 0, 1, 0],
-  ],
-  player: {
-    x: 0,
-    y: 4,
-  },
-  goal: {
-    x: 4,
-    y: 1,
-  },
-  theme: "default",
-};
-function Game(id, level) {
-  this.el = document.getElementById(id);
+(function (context) {
+  let levels = [];
 
-  this.tileTypes = ["floor", "wall"];
+  levels[0] = {
+    map: [
+      [1, 1, 0, 0, 1],
+      [1, 0, 0, 0, 0],
+      [0, 0, 1, 1, 0],
+      [0, 0, 0, 1, 0],
+      [0, 1, 0, 1, 0],
+    ],
+    player: {
+      x: 0,
+      y: 4,
+    },
+    goal: {
+      x: 4,
+      y: 1,
+    },
+    theme: "default",
+  };
+  levels[1] = {
+    map: [
+      [1, 0, 1, 1, 1, 1],
+      [0, 0, 0, 0, 0, 0],
+      [0, 1, 1, 1, 0, 0],
+      [0, 0, 0, 1, 1, 0],
+      [0, 1, 0, 1, 0, 0],
+    ],
 
-  this.tileDim = 32;
+    player: {
+      x: 2,
+      y: 4,
+    },
+    goal: {
+      x: 4,
+      y: 4,
+    },
+    theme: "grassland",
+  };
 
-  // inherit the level's properties: map, player start, goal start.
-  this.map = level.map;
-  this.theme = level.theme;
-  this.player = { ...level.player };
-  this.goal = { ...level.goal };
-}
+  levels[2] = {
+    map: [
+      [1, 0, 1, 0, 0, 1, 0],
+      [0, 0, 0, 0, 0, 1, 0],
+      [1, 0, 1, 1, 0, 0, 0],
+      [1, 0, 0, 1, 0, 1, 0],
+      [1, 1, 0, 0, 1, 0, 0],
+    ],
+    player: {
+      x: 2,
+      y: 4,
+    },
+    goal: {
+      x: 6,
+      y: 4,
+    },
+    theme: "dungeon",
+  };
 
-Game.prototype.populateMap = function () {
-  this.el.className = "game-container " + this.theme;
+  function Game(id, level) {
+    this.el = document.getElementById(id);
+    this.level_idx = 0;
+    this.tileTypes = ["floor", "wall"];
 
-  let tiles = document.getElementById("tiles");
+    this.tileDim = 62;
 
-  for (var y = 0; y < this.map.length; ++y) {
-    for (var x = 0; x < this.map[y].length; ++x) {
-      let tileCode = this.map[y][x];
+    this.map = level.map;
+    this.theme = level.theme;
+    this.player = { ...level.player };
+    this.goal = { ...level.goal };
+  }
 
-      let tileType = this.tileTypes[tileCode];
+  Game.prototype.collide = function () {
+    this.player.el.className += "collide";
+    let delay = 200;
+    let obj = this;
+    window.setTimeout(function () {
+      obj.player.el.className = "player";
+    }, delay);
+    return 0;
+  };
 
-      let tile = this.createEl(x, y, tileType);
+  Game.prototype.populateMap = function () {
+    this.el.className = "game-container " + this.theme;
 
-      tiles.appendChild(tile); // add to tile layer
+    let tiles = document.getElementById("tiles");
+
+    for (var y = 0; y < this.map.length; ++y) {
+      for (var x = 0; x < this.map[y].length; ++x) {
+        let tileCode = this.map[y][x];
+
+        let tileType = this.tileTypes[tileCode];
+
+        let tile = this.createEl(x, y, tileType);
+
+        tiles.appendChild(tile);
+      }
     }
-  }
-};
-Game.prototype.createEl = function (x, y, type) {
-  // create one tile.
-  let el = document.createElement("div");
+  };
+  Game.prototype.createEl = function (x, y, type) {
+    let el = document.createElement("div");
 
-  // two class names: one for tile, one or the tile type.
-  el.className = type;
+    el.className = type;
 
-  // set width and height of tile based on the passed-in dimensions.
-  el.style.width = el.style.height = this.tileDim + "px";
+    el.style.width = el.style.height = this.tileDim + "px";
 
-  // set left positions based on x coordinate.
-  el.style.left = x * this.tileDim + "px";
+    el.style.left = x * this.tileDim + "px";
 
-  // set top position based on y coordinate.
-  el.style.top = y * this.tileDim + "px";
+    el.style.top = y * this.tileDim + "px";
 
-  return el;
-};
-Game.prototype.placeSprite = function (type) {
-  // syntactic sugar
-  let x = this[type].x;
+    return el;
+  };
+  Game.prototype.placeSprite = function (type) {
+    let x = this[type].x;
 
-  let y = this[type].y;
+    let y = this[type].y;
 
-  // reuse the createTile function
-  let sprite = this.createEl(x, y, type);
+    let sprite = this.createEl(x, y, type);
 
-  sprite.id = type;
+    sprite.id = type;
 
-  // set the border radius of the sprite.
-  sprite.style.borderRadius = this.tileDim + "px";
+    sprite.style.borderRadius = this.tileDim + "px";
 
-  // get half the difference between tile and sprite.
+    let layer = this.el.querySelector("#sprites");
 
-  // grab the layer
-  let layer = this.el.querySelector("#sprites");
+    layer.appendChild(sprite);
 
-  layer.appendChild(sprite);
+    return sprite;
+  };
+  Game.prototype.sizeUp = function () {
+    let map = this.el.querySelector(".game-map");
 
-  return sprite;
-};
-Game.prototype.sizeUp = function () {
-  // inner container so that text can be below it
-  let map = this.el.querySelector(".game-map");
+    map.style.height = this.map.length * this.tileDim + "px";
 
-  // inner container, height. Need this.map
-  map.style.height = this.map.length * this.tileDim + "px";
+    map.style.width = this.map[0].length * this.tileDim + "px";
+  };
+  Game.prototype.movePlayer = function (event) {
+    event.preventDefault();
+    let actions = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
+    if (actions.indexOf(event.code) === -1) {
+      return;
+    }
 
-  map.style.width = this.map[0].length * this.tileDim + "px";
-};
-Game.prototype.movePlayer = function (event) {
-  event.preventDefault();
-  let actions = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
-  if (actions.indexOf(event.code) === -1) {
-    //event.keyCode < 37 || event.keyCode > 40)
-    return;
-  }
+    switch (event.code) {
+      case "ArrowLeft":
+        this.moveLeft();
+        break;
 
-  switch (event.code) {
-    case "ArrowLeft":
-      this.moveLeft();
-      break;
+      case "ArrowUp":
+        this.moveUp();
+        break;
 
-    case "ArrowUp":
-      this.moveUp();
-      break;
+      case "ArrowRight":
+        this.moveRight();
+        break;
 
-    case "ArrowRight":
-      this.moveRight();
-      break;
+      case "ArrowDown":
+        this.moveDown();
+        break;
+    }
+  };
+  Game.prototype.checkGoal = function () {
+    let body = document.querySelector("body");
 
-    case "ArrowDown":
-      this.moveDown();
-      break;
-  }
-};
-Game.prototype.checkGoal = function () {
-  let body = document.querySelector("body");
+    if (this.player.y == this.goal.y && this.player.x == this.goal.x) {
+      body.className = "success";
+    } else {
+      body.className = "";
+    }
+  };
+  Game.prototype.keyboardListener = function () {
+    document.addEventListener("keydown", (event) => {
+      this.movePlayer(event);
 
-  if (this.player.y == this.goal.y && this.player.x == this.goal.x) {
-    body.className = "success";
-  } else {
-    body.className = "";
-  }
-};
-Game.prototype.keyboardListener = function () {
-  document.addEventListener("keydown", (event) => {
-    this.movePlayer(event);
+      this.checkGoal();
+    });
+  };
 
-    this.checkGoal();
-  });
-};
+  /* movement helpers */
 
-/* movement helpers */
+  Game.prototype.moveLeft = function () {
+    if (this.player.x == 0) {
+      this.collide();
+      return;
+    }
 
-Game.prototype.moveLeft = function () {
-  if (this.player.x == 0) {
-    return;
-  }
+    let nextTile = this.map[this.player.y][this.player.x - 1];
+    if (nextTile == 1) {
+      this.collide();
+      return;
+    }
 
-  let nextTile = this.map[this.player.y][this.player.x - 1];
-  if (nextTile == 1) {
-    return;
-  }
+    this.player.x -= 1;
 
-  this.player.x -= 1;
+    this.updateHoriz();
+  };
+  Game.prototype.moveUp = function () {
+    if (this.player.y == 0) {
+      this.collide();
+      return;
+    }
 
-  this.updateHoriz();
-};
-Game.prototype.moveUp = function () {
-  if (this.player.y == 0) {
-    return;
-  }
+    let nextTile = this.map[this.player.y - 1][this.player.x];
+    if (nextTile == 1) {
+      this.collide();
+      return;
+    }
 
-  let nextTile = this.map[this.player.y - 1][this.player.x];
-  if (nextTile == 1) {
-    return;
-  }
+    this.player.y -= 1;
 
-  this.player.y -= 1;
+    this.updateVert();
+  };
+  Game.prototype.moveRight = function () {
+    if (this.player.x == this.map[this.player.y].length - 1) {
+      this.collide();
+      return;
+    }
+    let nextTile = this.map[this.player.y][this.player.x + 1];
 
-  this.updateVert();
-};
-Game.prototype.moveRight = function () {
-  if (this.player.x == this.map[this.player.y].length - 1) {
-    return;
-  }
-  let nextTile = this.map[this.player.y][this.player.x + 1];
+    if (nextTile == 1) {
+      this.collide();
+      return;
+    }
 
-  if (nextTile == 1) {
-    return;
-  }
+    this.player.x += 1;
 
-  this.player.x += 1;
+    this.updateHoriz();
+  };
+  Game.prototype.moveDown = function () {
+    if (this.player.y == this.map.length - 1) {
+      this.collide();
+      return;
+    }
+    let nextTile = this.map[this.player.y + 1][this.player.x];
 
-  this.updateHoriz();
-};
-Game.prototype.moveDown = function () {
-  if (this.player.y == this.map.length - 1) {
-    return;
-  }
-  let nextTile = this.map[this.player.y + 1][this.player.x];
+    if (nextTile == 1) {
+      this.collide();
+      return;
+    }
 
-  if (nextTile == 1) {
-    return;
-  }
+    this.player.y += 1;
 
-  this.player.y += 1;
+    this.updateVert();
+  };
 
-  this.updateVert();
-};
+  /* dom update helpers */
 
-/* dom update helpers */
+  Game.prototype.updateHoriz = function () {
+    this.player.el.style.left = this.player.x * this.tileDim + "px";
+  };
 
-Game.prototype.updateHoriz = function () {
-  this.player.el.style.left = this.player.x * this.tileDim + "px";
-};
+  Game.prototype.updateVert = function () {
+    this.player.el.style.top = this.player.y * this.tileDim + "px";
+  };
 
-Game.prototype.updateVert = function () {
-  this.player.el.style.top = this.player.y * this.tileDim + "px";
-};
+  Game.prototype.buttonListeners = function (instruction_msg, goal_msg) {
+    let up = document.getElementById("up");
+    let left = document.getElementById("left");
+    let down = document.getElementById("down");
+    let right = document.getElementById("right");
 
-/* initialization */
+    let obj = this;
 
-function init() {
-  let myGame = new Game("game-container-1", levels[0]);
+    up.addEventListener("mousedown", function () {
+      obj.moveUp();
+      obj.checkGoal(instruction_msg, goal_msg);
+    });
 
-  myGame.populateMap();
+    down.addEventListener("mousedown", function () {
+      obj.moveDown();
+      obj.checkGoal(instruction_msg, goal_msg);
+    });
 
-  myGame.sizeUp();
+    left.addEventListener("mousedown", function () {
+      obj.moveLeft();
+      obj.checkGoal(instruction_msg, goal_msg);
+    });
 
-  myGame.placeSprite("goal");
+    right.addEventListener("mousedown", function () {
+      obj.moveRight();
+      obj.checkGoal(instruction_msg, goal_msg);
+    });
+  };
 
-  let playerSprite = myGame.placeSprite("player");
+  /* initialization */
 
-  myGame.player.el = playerSprite;
+  Game.prototype.changeLevel = function () {
+    this.level_idx++;
+    if (this.level_idx > levels.length - 1) {
+      this.level_idx = 0;
+    }
+    let level = levels[this.level_idx];
+    this.map = level.map;
+    this.player = { ...level.player };
+    this.goal = { ...level.goal };
+  };
 
-  myGame.keyboardListener();
-}
+  Game.prototype.addMazeListener = function () {
+    let map = this.el.querySelector(".game-map");
+    let obj = this;
+    map.addEventListener("mousedown", function (e) {
+      if (obj.player.y != obj.goal.y || obj.player.x != obj.goal.x) {
+        return;
+      }
+      obj.changeLevel();
+      let layers = obj.el.querySelectorAll(".layer");
+      for (layer of layers) {
+        layer.innerHTML = "";
+      }
+      obj.placeLevel();
+      obj.checkGoal();
+    });
+  };
+  Game.prototype.addListeners = function () {
+    this.keyboardListener();
+    this.buttonListeners();
+    this.addMazeListener();
+  };
+  Game.prototype.placeLevel = function () {
+    this.populateMap();
+    this.sizeUp();
+    this.placeSprite("goal");
+    let playerSprite = this.placeSprite("player");
+    this.player.el = playerSprite;
+  };
 
-init();
+  context.init = function () {
+    let myGame = new Game("game-container-1", levels[0]);
+
+    // encapsulate for multi-level
+    myGame.placeLevel();
+
+    // add listeners
+    myGame.addListeners();
+  };
+})(app);
+
+app.init();
