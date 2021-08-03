@@ -14,4 +14,5 @@ A web based maze game
 </br>
 To get started with the project, clone the repository and open index.html
 ## Created by Amartya Singh
+### Webiste link: maze-runner-alpha.surge.sh
 
