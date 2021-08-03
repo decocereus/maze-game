@@ -270,3 +270,26 @@ h1::after {
     transform: scale(0.85) translate(1px, -2px);
   }
 }
+
+@media only screen and (max-width: 600px) {
+  #map-and-controls {
+    flex-direction: column;
+    margin: 0 auto;
+    margin-left: 200px;
+  }
+  p {
+    text-align: center;
+    margin-left: 150px;
+    width: 100%;
+  }
+  footer {
+    text-align: center;
+    margin-left: 250px;
+    width: max-content;
+    margin-bottom: 0px;
+  }
+  #controls {
+    margin-top: 10px;
+    margin-left: 150px;
+  }
+}
